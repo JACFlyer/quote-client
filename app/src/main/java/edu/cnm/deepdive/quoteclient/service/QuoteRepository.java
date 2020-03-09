@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 public class QuoteRepository {
 
   private static final int NETWORK_POOL_SIZE = 10;
+  private static final String OAUTH_HEADER_FORMAT = "Bearer %s";
+
 
   private final QodService proxy;
   private final Executor networkPool;
@@ -24,8 +26,8 @@ public class QuoteRepository {
   public static QuoteRepository getInstance() {
     return InstanceHolder.INSTANCE;
   }
-  public Single<Quote> getRandom() {
-    return proxy.getRandon()
+  public Single<Quote> getRandom(String token) {
+    return proxy.getRandon(String.format(OAUTH_HEADER_FORMAT, token))
         .subscribeOn(Schedulers.from(networkPool));
 
   }
