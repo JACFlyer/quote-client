@@ -41,7 +41,7 @@ public class HomeViewModel extends ViewModel {
           Log.d(getClass().getName(), account.getIdToken());
           Log.d(getClass().getName(), account.getEmail());
           Log.d(getClass().getName(), account.getId());
-          
+
 
           pending.add(
               repository.getRandom(account.getIdToken())
