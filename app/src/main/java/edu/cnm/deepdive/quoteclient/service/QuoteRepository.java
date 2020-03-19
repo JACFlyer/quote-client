@@ -1,8 +1,13 @@
 package edu.cnm.deepdive.quoteclient.service;
 
+import edu.cnm.deepdive.quoteclient.model.Content;
 import edu.cnm.deepdive.quoteclient.model.Quote;
+import edu.cnm.deepdive.quoteclient.model.Source;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -26,15 +31,49 @@ public class QuoteRepository {
   public static QuoteRepository getInstance() {
     return InstanceHolder.INSTANCE;
   }
+
+
   public Single<Quote> getRandom(String token) {
     return proxy.getRandon(String.format(OAUTH_HEADER_FORMAT, token))
+        .subscribeOn(Schedulers.from(networkPool));
+  }
+
+  public Single<List<Quote>> getAllQuotes(String token) {
+   return proxy.getAll(String.format(OAUTH_HEADER_FORMAT, token))
+   .subscribeOn(Schedulers.from(networkPool));
+  }
+
+  public Single<List<Source>> getAllSources(String token, boolean includeNull) {
+    return proxy.getAllSources(String.format(OAUTH_HEADER_FORMAT, token), includeNull)
+        .subscribeOn(Schedulers.from(networkPool));
+  }
+
+
+
+  public Single<Quote> add(String token, Quote quote) {
+    return proxy.post(String.format(OAUTH_HEADER_FORMAT, token), quote)
         .subscribeOn(Schedulers.from(networkPool));
 
   }
 
+  public Single<List<Content>> getAllContent(String token) {
+    return getAllSources(token, true)
+        .subscribeOn(Schedulers.io())
+        .map((sources) -> {
+          List<Content> combined = new ArrayList<>();
+          for (Source source : sources) {
+            combined.add(source);
+            Collections.addAll(combined, source.getQuotes());
+          }
+
+          return combined;
+        });
+  }
+
+
+//  Nested class
   private static class InstanceHolder {
     private static final QuoteRepository INSTANCE = new QuoteRepository();
   }
-
 
 }

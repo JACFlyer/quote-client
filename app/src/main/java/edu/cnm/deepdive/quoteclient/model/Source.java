@@ -5,11 +5,12 @@ import java.net.URL;
 import java.util.Date;
 import java.util.UUID;
 
-//  Content is a Marker Interface
-public class Quote implements Content {
+// Content is a Marker Interface
+public class Source implements Content {
 
+  //  Fields
   @Expose
-  private String id;
+  private UUID id;
 
   @Expose
   private Date created;
@@ -18,34 +19,21 @@ public class Quote implements Content {
   private Date updated;
 
   @Expose
-  private String text;
+  private String name;
+
+  @Expose
+  private Quote[] quotes;
 
   @Expose
   private URL href;
 
-  @Expose
-  private Source source;
 
-   //  Private Source source;
-
-
-
-  //  Setters and Getters
-
-
-  public Source getSource() {
-    return source;
-  }
-
-  public void setSource(Source source) {
-    this.source = source;
-  }
-
-  public String getId() {
+  //  Getters and Setters
+  public UUID getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(UUID id) {
     this.id = id;
   }
 
@@ -65,14 +53,21 @@ public class Quote implements Content {
     this.updated = updated;
   }
 
-  public String getText() {
-    return text;
+  public String getName() {
+    return name;
   }
 
-  public void setText(String text) {
-    this.text = text;
+  public void setName(String name) {
+    this.name = name;
   }
 
+  public Quote[] getQuotes() {
+    return quotes;
+  }
+
+  public void setQuotes(Quote[] quotes) {
+    this.quotes = quotes;
+  }
   public URL getHref() {
     return href;
   }
@@ -80,4 +75,6 @@ public class Quote implements Content {
   public void setHref(URL href) {
     this.href = href;
   }
+
+
 }
